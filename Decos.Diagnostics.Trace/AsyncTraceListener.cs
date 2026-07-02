@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,23 @@ namespace Decos.Diagnostics.Trace
     /// </summary>
     public abstract class AsyncTraceListener : TraceListenerBase
     {
+        //> Berend #393684
+        [DllImport("kernel32.dll")]
+        private static extern uint GetCurrentThreadId();
+
+        private static int? TryGetCurrentOsThreadId()
+        {
+            try
+            {
+                return unchecked((int)GetCurrentThreadId());
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        //< Berend #393684
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncTraceListener"/>
         /// class.
@@ -122,6 +140,7 @@ namespace Decos.Diagnostics.Trace
                 EventId = e.ID,
                 ProcessId = e.Cache.ProcessId,
                 ThreadId = e.Cache.ThreadId,
+                OsThreadId = TryGetCurrentOsThreadId(), // Berend #393684
                 CustomerId = e.CustomerID,
                 SessionId = e.SessionID
             };

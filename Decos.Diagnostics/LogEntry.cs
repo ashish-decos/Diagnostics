@@ -54,10 +54,14 @@ namespace Decos.Diagnostics
         public int ProcessId { get; set; }
 
         /// <summary>
-        /// Gets or sets the managed thread ID of the thread that created the log
-        /// entry.
+        /// Gets or sets the managed thread ID of the thread that created the log entry.
         /// </summary>
         public string ThreadId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the operating system thread ID of the thread that created the log entry.
+        /// </summary>
+        public int? OsThreadId { get; set; } // Berend #393684
 
         /// <summary>
         /// Gets or sets the point in time the log entry was created.
